@@ -1,0 +1,79 @@
+basePath: /api/address
+definitions:
+  handlers.Address:
+    properties:
+      city:
+        type: string
+      house:
+        type: string
+      lat:
+        type: string
+      lon:
+        type: string
+      street:
+        type: string
+    type: object
+  handlers.SearchRequest:
+    properties:
+      query:
+        type: string
+    type: object
+  handlers.SearchResponse:
+    properties:
+      addresses:
+        items:
+          $ref: '#/definitions/handlers.Address'
+        type: array
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Сервис для поиска и геокодирования адресов
+  title: Geo Service API
+  version: "1.0"
+paths:
+  /geocode:
+    post:
+      consumes:
+      - application/json
+      description: Получение координат по адресу
+      parameters:
+      - description: Адрес
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SearchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SearchResponse'
+      summary: Геокодирование адреса
+      tags:
+      - addresses
+  /search:
+    post:
+      consumes:
+      - application/json
+      description: Поиск адреса по текстовому запросу
+      parameters:
+      - description: Поисковый запрос
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.SearchRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SearchResponse'
+      summary: Поиск адреса
+      tags:
+      - addresses
+swagger: "2.0"

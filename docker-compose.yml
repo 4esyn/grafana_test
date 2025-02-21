@@ -1,0 +1,54 @@
+services:
+  app:
+    build:
+      context: ./geoservice
+      dockerfile: Dockerfile
+    container_name: geoservice
+    restart: unless-stopped
+    environment:
+      - DADATA_API_KEY=${DADATA_API_KEY:-test_key}
+      - DADATA_SECRET_KEY=${DADATA_SECRET_KEY:-test_secret}
+      - JWT_SECRET=${JWT_SECRET:-secret}
+    ports:
+      - '8080:8080'
+    networks:
+      - mylocal
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    depends_on:
+      - app
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - mylocal
+
+  grafana:
+    image: catbehemoth/grafana:latest
+    container_name: grafana
+    user: root
+    depends_on:
+      - prometheus
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_PATHS_DASHBOARDS=/var/lib/grafana/dashboards
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - mylocal
+
+networks:
+  mylocal:
+    driver: bridge
+
+volumes:
+  grafana-storage:

@@ -1,0 +1,92 @@
+{
+	"annotations": {
+		"list": []
+	},
+	"editable": true,
+	"fiscalYearStartMonth": 0,
+	"graphTooltip": 0,
+	"links": [],
+	"liveNow": false,
+	"panels": [
+		{
+			"title": "Время ответа эндпоинтов",
+			"type": "timeseries",
+			"datasource": {
+				"type": "prometheus",
+				"uid": "prometheus"
+			},
+			"targets": [
+				{
+					"expr": "rate(geoservice_endpoint_duration_seconds_sum[5m]) / rate(geoservice_endpoint_duration_seconds_count[5m])",
+					"legendFormat": "{{endpoint}}"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "s"
+				}
+			},
+			"gridPos": {
+				"h": 8,
+				"w": 12,
+				"x": 0,
+				"y": 0
+			}
+		},
+		{
+			"title": "Количество запросов в секунду",
+			"type": "timeseries",
+			"datasource": {
+				"type": "prometheus",
+				"uid": "prometheus"
+			},
+			"targets": [
+				{
+					"expr": "rate(geoservice_endpoint_requests_total[5m])",
+					"legendFormat": "{{endpoint}}"
+				}
+			],
+			"gridPos": {
+				"h": 8,
+				"w": 12,
+				"x": 12,
+				"y": 0
+			}
+		},
+		{
+			"title": "Время ответа внешнего API",
+			"type": "timeseries",
+			"datasource": {
+				"type": "prometheus",
+				"uid": "prometheus"
+			},
+			"targets": [
+				{
+					"expr": "rate(geoservice_external_api_duration_seconds_sum[5m]) / rate(geoservice_external_api_duration_seconds_count[5m])",
+					"legendFormat": "{{method}}"
+				}
+			],
+			"fieldConfig": {
+				"defaults": {
+					"unit": "s"
+				}
+			},
+			"gridPos": {
+				"h": 8,
+				"w": 12,
+				"x": 0,
+				"y": 8
+			}
+		}
+	],
+	"refresh": "5s",
+	"schemaVersion": 38,
+	"style": "dark",
+	"tags": ["geoservice"],
+	"time": {
+		"from": "now-1h",
+		"to": "now"
+	},
+	"title": "Geo Service Dashboard",
+	"version": 1
+}
